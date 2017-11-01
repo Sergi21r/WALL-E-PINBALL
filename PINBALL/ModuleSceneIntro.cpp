@@ -29,72 +29,83 @@ bool ModuleSceneIntro::Start()
 	general = App->textures->Load("pinball/map2.png");
 	circle = App->textures->Load("pinball/ball.png"); 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	flip_l = App->textures->Load("pinball/flipper_l2");
+	flip_l = App->textures->Load("pinball/prueba1");
+	spring_text = App->textures->Load("pinball/muelle.png");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
 	//CHAIN COLLIDER 1
-	int chain_collider1[114] = {
-		400, 600,
-		399, 178,
-		394, 132,
-		388, 111,
-		377, 87,
-		366, 70,
-		357, 60,
-		376, 42,
-		387, 26,
-		389, 17,
-		383, 10,
-		367, 16,
-		342, 48,
-		307, 27,
-		287, 17,
-		272, 13,
-		245, 9,
-		225, 8,
-		201, 13,
-		188, 25,
-		172, 13,
-		151, 11,
-		127, 12,
-		107, 17,
-		86, 22,
-		71, 30,
-		50, 45,
-		42, 35,
-		28, 23,
-		14, 13,
-		5, 14,
-		3, 25,
-		7, 35,
-		20, 45,
-		33, 60,
-		23, 76,
-		12, 95,
-		6, 119,
-		7, 148,
-		12, 171,
-		21, 191,
-		39, 221,
-		54, 246,
-		60, 255,
-		6, 293,
-		6, 319,
+	int chain_collider1[134] = {
+		399, 618,
+		399, 173,
+		394, 134,
+		381, 99,
+		372, 79,
+		358, 59,
+		373, 46,
+		390, 23,
+		379, 14,
+		363, 22,
+		345, 38,
+		320, 31,
+		305, 24,
+		280, 14,
+		259, 10,
+		237, 6,
+		214, 10,
+		202, 16,
+		187, 23,
+		172, 15,
+		149, 12,
+		123, 12,
+		100, 18,
+		75, 31,
+		52, 45,
+		38, 28,
+		24, 17,
+		9, 14,
+		7, 29,
+		17, 40,
+		33, 57,
+		23, 72,
+		16, 87,
+		9, 105,
+		6, 125,
+		7, 143,
+		9, 160,
+		17, 178,
+		28, 204,
+		49, 238,
+		59, 257,
+		4, 292,
+		7, 318,
 		60, 355,
-		6, 386,
-		13, 432,
-		6, 444,
-		6, 506,
-		120, 576,
-		128, 598,
-		-6, 598,
-		-6, -7,
-		409, -7,
-		407, 601
+		7, 387,
+		13, 428,
+		8, 441,
+		5, 458,
+		4, 498,
+		5, 508,
+		118, 577,
+		129, 643,
+		240, 643,
+		254, 576,
+		366, 507,
+		367, 435,
+		347, 417,
+		362, 412,
+		371, 397,
+		358, 388,
+		349, 378,
+		360, 351,
+		365, 301,
+		370, 266,
+		375, 264,
+		376, 618,
+		380, 618
 	};
 	PhysBody* bg;
-	bg = App->physics->CreateChain(0, 0, chain_collider1, 114);
+	bg = App->physics->CreateChain(0, 0, chain_collider1, 134);
 	bg->body->SetType(b2_staticBody);
 	bg->body->GetFixtureList()->SetDensity(0.1f);
 
@@ -597,7 +608,7 @@ bool ModuleSceneIntro::Start()
 	bg25->body->GetFixtureList()->SetRestitution(0.5f);
 
 	//COLLIDER PRUEBA SPAWN
-	int collider_p[12] = {
+	/*int collider_p[12] = {
 		378, 581,
 		400, 581,
 		400, 547,
@@ -608,14 +619,37 @@ bool ModuleSceneIntro::Start()
 	PhysBody* bgp;
 	bgp = App->physics->CreateChain(0, 0, collider_p, 12);
 	bgp->body->SetType(b2_staticBody);
-	bgp->body->GetFixtureList()->SetDensity(0.1f);
-
-	//CIRCLE
-	circles.add(App->physics->CreateCircle(387, 540, 5));
+	bgp->body->GetFixtureList()->SetDensity(0.1f);*/
 
 	//FLIPPERS
 	App->physics->CreateFlipper_l();
 	App->physics->CreateFlipper_r();
+
+	//start circle
+	circles.add(App->physics->CreateCircle(388, 540, 5));
+
+	//spring
+	spring = App->physics->CreateRectangle(388, 565, 20, 40);
+	//spring->body->SetType(b2_staticBody);
+
+	//stop spring
+	int stopspring1[8] = {
+		377, 516,
+		384, 545,
+		377, 545,
+		377, 517
+	};
+	stop1 = App->physics->CreateChain(-5, 0, stopspring1, 8);
+	stop1->body->SetType(b2_staticBody);
+
+	int stopspring2[8] = {
+		401, 518,
+		396, 545,
+		402, 545,
+		402, 518
+	};
+	stop2 = App->physics->CreateChain(0, 0, stopspring2, 8);
+	stop2->body->SetType(b2_staticBody);
 
 	return ret;
 }
@@ -644,10 +678,24 @@ update_status ModuleSceneIntro::Update()
 		circles.getLast()->data->listener = this;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		circles.getFirst()->data->body->ApplyLinearImpulse({ 0,-10 }, { 0,0 } , true);
+	//INPUT SPRING
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		spring->body->ApplyForceToCenter(b2Vec2(0.0f, 0.01f), true);
+	}
+	else
+	{
+		spring->body->ApplyForceToCenter(b2Vec2(0.0f, -75.0f), true);
+	}
+
+	int x, y;
+	spring->GetPosition(x, y);
+	App->renderer->Blit(spring_text, x, y, NULL, 1.0f);
 
 	//INPUT FLIPPERS
+	
+	App->renderer->Blit(spring_text, 132, 557,NULL, 0.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), -0.5f);
+
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_REPEAT)
 	{
 		App->physics->ret_flip_l->ApplyTorque(-100.0, true);
@@ -657,6 +705,8 @@ update_status ModuleSceneIntro::Update()
 			App->physics->ret_flip_l->ApplyTorque(150.0, false);
 		}
 	}
+
+
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
 	{
 		App->physics->ret_flip_r->ApplyTorque(100.0, true);

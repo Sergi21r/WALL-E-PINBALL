@@ -22,7 +22,6 @@ public:
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> ricks;
 	p2List<PhysBody*> collider1;
-	p2List<PhysBody*> flipperl;
 
 	PhysBody* sensor;
 	bool sensed;
@@ -31,6 +30,17 @@ public:
 
 	//background
 	SDL_Rect background;
+
+	//flippers
+	//PhysBody* flipperl;
+
+	//spring
+	PhysBody* spring;
+	SDL_Texture* spring_text;
+
+	//stop spring
+	PhysBody* stop1;
+	PhysBody* stop2;
 
 	SDL_Texture* flip_l;
 
