@@ -43,13 +43,13 @@ public:
 	PhysBody* stop2;
 
 	//left flippers
-	//PhysBody* flipperl;
+
 	SDL_Texture* flip_l;
 	SDL_Texture* flip_r;
 
 	//sensors
 	PhysBody* respawn_sensor;
-	//p2List<PhysBody*> Sensors;
+	p2List<PhysBody*> Sensors;
 
 	//life
 	uint lives = 3;

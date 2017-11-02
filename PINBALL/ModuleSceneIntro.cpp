@@ -629,6 +629,7 @@ bool ModuleSceneIntro::Start()
 
 	//start circle
 	circles.add(App->physics->CreateCircle(388, 540, 5));
+	circles.getLast()->data->listener = this;
 
 	//spring
 	spring = App->physics->CreateRectangle(388, 565, 20, 40);
@@ -726,6 +727,11 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+	//RESPAWN BALL -------------------------------------------------------------
+	
+
+
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -773,7 +779,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	// ray -----------------
-	if(ray_on == true)
+	/*if(ray_on == true)
 	{
 		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
 		destination.Normalize();
@@ -783,7 +789,7 @@ update_status ModuleSceneIntro::Update()
 
 		if(normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
-	}
+	}*/
 
 	return UPDATE_CONTINUE;
 }
@@ -807,10 +813,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
 
+
 	
-	/*
 	p2List_item<PhysBody*>* sens = Sensors.getFirst();
-	*/
+	
 	if (bodyA == respawn_sensor || bodyB == respawn_sensor) {
 		App->renderer->Blit(loselife, 500, 233, NULL);
 	}
