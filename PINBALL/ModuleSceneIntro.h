@@ -31,8 +31,6 @@ public:
 	//background
 	SDL_Rect background;
 
-	//ball
-	PhysBody* ball;
 
 	//spring
 	PhysBody* spring;
@@ -49,11 +47,20 @@ public:
 
 	//sensors
 	PhysBody* respawn_sensor;
-	p2List<PhysBody*> Sensors;
+	PhysBody* sensor1;
+	PhysBody* sensor2;
+	PhysBody* sensor3;
+	PhysBody* sensor4;
+	PhysBody* sensor5;
+	PhysBody* sensor6;
+	PhysBody* sensor7;
+	PhysBody* sensor8;
+	PhysBody* sensor9;
 
 	//life
 	uint lives = 3;
 	SDL_Texture* loselife;
+	uint cont = 0;
 
 	//score
 	uint score = 0;

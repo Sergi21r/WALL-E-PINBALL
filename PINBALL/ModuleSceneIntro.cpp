@@ -35,10 +35,10 @@ bool ModuleSceneIntro::Start()
 	flip_l = App->textures->Load("pinball/flipper_l2.png");
 	flip_r = App->textures->Load("pinball/flipper_r2.png");
 	spring_text = App->textures->Load("pinball/muelle.png");
-	loselife = App->textures->Load("pinball/lose_life.png");
-	game_over = App->textures->Load("pinball/game_over.png");
+	//loselife = App->textures->Load("pinball/lose_life.png");
+	//game_over = App->textures->Load("pinball/game_over.png");
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
 	//CHAIN COLLIDER 1
 	int chain_collider1[134] = {
@@ -613,19 +613,6 @@ bool ModuleSceneIntro::Start()
 	bg25->body->SetType(b2_staticBody);
 	bg25->body->GetFixtureList()->SetRestitution(0.5f);
 
-	//COLLIDER PRUEBA SPAWN
-	/*int collider_p[12] = {
-		378, 581,
-		400, 581,
-		400, 547,
-		377, 547,
-		377, 565,
-		378, 572
-	};
-	PhysBody* bgp;
-	bgp = App->physics->CreateChain(0, 0, collider_p, 12);
-	bgp->body->SetType(b2_staticBody);
-	bgp->body->GetFixtureList()->SetDensity(0.1f);*/
 
 	//FLIPPERS
 	App->physics->CreateFlipper_l();
@@ -637,7 +624,7 @@ bool ModuleSceneIntro::Start()
 
 	//spring
 	spring = App->physics->CreateRectangle(388, 565, 20, 40);
-	//spring->body->SetType(b2_staticBody);
+
 
 	//stop spring
 	int stopspring1[8] = {
@@ -659,8 +646,16 @@ bool ModuleSceneIntro::Start()
 	stop2->body->SetType(b2_staticBody);
 
 	//sensors
-	Sensors.add(App->physics->CreateRectangleSensor(185, 595, 150, 2));
 	respawn_sensor = App->physics->CreateRectangleSensor(185, 595, 150, 2);
+	sensor1 = App->physics->CreateRectangleSensor(125, 295, 27, 25);
+	sensor2 = App->physics->CreateRectangleSensor(166, 295, 27, 25);
+	sensor3 = App->physics->CreateRectangleSensor(210, 295, 27, 25);
+	sensor4 = App->physics->CreateRectangleSensor(250, 295, 27, 25);
+	sensor5 = App->physics->CreateRectangleSensor(157, 262, 27, 25);
+	sensor6 = App->physics->CreateRectangleSensor(218, 262, 27, 25);
+	sensor7 = App->physics->CreateRectangleSensor(80, 114, 31, 39);
+	sensor8 = App->physics->CreateRectangleSensor(117, 109, 50, 93);
+	sensor9 = App->physics->CreateRectangleSensor(250, 125, 49, 47);
 
 	return ret;
 }
@@ -705,7 +700,7 @@ update_status ModuleSceneIntro::Update()
 
 	//INPUT FLIPPERS ------------------------------------------------------------------------------------------
 	
-	//App->renderer->Blit(flip_l, 132, 557,NULL, 1.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), -0.5f);
+	
 
 	App->renderer->Blit(flip_l, 135, 550 ,NULL, 1.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), 0, 0);
 	App->renderer->Blit(flip_r, 192, 551, NULL, 1.0f, RADTODEG* App->physics->ret_flip_r->GetAngle(), 48,0);
@@ -733,11 +728,7 @@ update_status ModuleSceneIntro::Update()
 	
 	//MANUAL RESPAWN -----------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-		lives = lives -1;
-		if (lives == 0)
-		{
-		}
-
+		lives = 3;
 		if (highscore < score) {
 			highscore = score;
 		}
@@ -747,12 +738,25 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	//TITLE WITH LIVES SCORE HIGHSCORE
-	p2SString title("LIVES: %d SCORE: %d LAST SCORE: %d ", lives, score, highscore);
-	App->window->SetTitle(title.GetString());
+	p2SString title("LIVES: %d SCORE: %d HIGHSCORE: %d ", lives, score, highscore);
+	p2SString title2("GAME OVER PRESS R TO RESTART - SCORE: %d HIGHSCORE: %d ", score, highscore);
+	if(lives!=0) App->window->SetTitle(title.GetString());
+	else App->window->SetTitle(title2.GetString());
 
 
 	//RESPAWN BALL -------------------------------------------------------------
 	
+	if (lives == 2 && cont==2) {
+		circles.add(App->physics->CreateCircle(388, 540, 5));
+		circles.getLast()->data->listener = this;
+		cont++;
+	}
+	if (lives == 1 && cont == 2) {
+		circles.add(App->physics->CreateCircle(388, 540, 5));
+		circles.getLast()->data->listener = this;
+		cont++;
+	}
+
 
 
 	// Prepare for raycast ------------------------------------------------------
@@ -814,41 +818,51 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}*/
 
+	
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	
-	/*
-	if(bodyA)
-	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}
-	/*
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
-	
-	
 	int x, y;
-	int xsens, ysens;
-	App->audio->PlayFx(bonus_fx);
-	
-	//bodyA->GetPosition(x, y);
-	//respawn_sensor->GetPosition(xsens, ysens);
-	p2List_item<PhysBody*>* sens = Sensors.getFirst();
-	
-	if (bodyA == sens->data) {
-		//App->renderer->Blit(loselife, 500, 233, NULL);
-		circles.add(App->physics->CreateCircle(388, 540, 5));
-		circles.getLast()->data->listener = this;
+	int x1, y1;
+	if (bodyA != NULL && bodyB != NULL) {
+		if (bodyA == respawn_sensor || bodyB == respawn_sensor) {
+			if (lives != 0) {
+				lives--;
+				cont = 2;
+			}
+		}
+		if (bodyA == sensor1 || bodyB == sensor1) {
+			score += 10;
+		}
+		if (bodyA == sensor2 || bodyB == sensor2) {
+			score += 10;
+		}
+		if (bodyA == sensor3 || bodyB == sensor3) {
+			score += 10;
+		}
+		if (bodyA == sensor4 || bodyB == sensor4) {
+			score += 10;
+		}
+		if (bodyA == sensor5 || bodyB == sensor5) {
+			score += 10;
+		}
+		if (bodyA == sensor6 || bodyB == sensor6) {
+			score += 10;
+		}
+		if (bodyA == sensor7 || bodyB == sensor7) {
+			score += 5;
+		}
+		if (bodyA == sensor8 || bodyB == sensor8) {
+			score += 5;
+		}
+		if (bodyA == sensor9 || bodyB == sensor9) {
+			score += 5;
+		}
 	}
 
-	//hacer que si choca con respawn sensor, if(lives==1) game over, if (lives==2 o 3) lives-- y respawn bola
-	//hacer score
+	App->audio->PlayFx(bonus_fx);
 	
 }
