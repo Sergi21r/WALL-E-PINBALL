@@ -31,7 +31,8 @@ public:
 	//background
 	SDL_Rect background;
 
-	
+	//ball
+	PhysBody* ball;
 
 	//spring
 	PhysBody* spring;
@@ -45,6 +46,15 @@ public:
 	//PhysBody* flipperl;
 	SDL_Texture* flip_l;
 	SDL_Texture* flip_r;
+
+	//sensors
+	PhysBody* respawn_sensor;
+	//p2List<PhysBody*> Sensors;
+
+	//life
+	uint lives = 3;
+	SDL_Texture* loselife;
+
 
 	SDL_Texture* circle;
 	SDL_Texture* box;

@@ -32,6 +32,7 @@ bool ModuleSceneIntro::Start()
 	flip_l = App->textures->Load("pinball/flipper_l2.png");
 	flip_r = App->textures->Load("pinball/flipper_r2.png");
 	spring_text = App->textures->Load("pinball/muelle.png");
+	loselife = App->textures->Load("pinball/lose_life.png");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
@@ -652,6 +653,10 @@ bool ModuleSceneIntro::Start()
 	stop2 = App->physics->CreateChain(0, 0, stopspring2, 8);
 	stop2->body->SetType(b2_staticBody);
 
+	//sensors
+	//Sensors.add(App->physics->CreateRectangleSensor(185, 595, 150, 2));
+	respawn_sensor = App->physics->CreateRectangleSensor(185, 595, 150, 2);
+
 	return ret;
 }
 
@@ -672,7 +677,7 @@ update_status ModuleSceneIntro::Update()
 	background.h = 599;
 	background.w = 598;
 	App->renderer->Blit(general, 0, 0, &background);
-
+	
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 5));
@@ -795,10 +800,19 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyA->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}
-
+	/*
 	if(bodyB)
 	{
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
+
+	
+	/*
+	p2List_item<PhysBody*>* sens = Sensors.getFirst();
+	*/
+	if (bodyA == respawn_sensor || bodyB == respawn_sensor) {
+		App->renderer->Blit(loselife, 500, 233, NULL);
+	}
+	
 }
