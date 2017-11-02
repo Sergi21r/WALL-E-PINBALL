@@ -8,6 +8,7 @@
 #include "ModulePhysics.h"
 #include "ModuleWindow.h"
 #include "p2SString.h"
+#include <Windows.h>
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -35,6 +36,7 @@ bool ModuleSceneIntro::Start()
 	flip_r = App->textures->Load("pinball/flipper_r2.png");
 	spring_text = App->textures->Load("pinball/muelle.png");
 	loselife = App->textures->Load("pinball/lose_life.png");
+	game_over = App->textures->Load("pinball/game_over.png");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
@@ -674,7 +676,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	//BACKGROUND
+	//BACKGROUND ------------------------------------------------------------------------------------------
 	background.x = 0;
 	background.y= 0;
 	background.h = 599;
@@ -687,7 +689,7 @@ update_status ModuleSceneIntro::Update()
 		circles.getLast()->data->listener = this;
 	}
 
-	//INPUT SPRING
+	//INPUT SPRING -------------------------------------------------------------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		spring->body->ApplyForceToCenter(b2Vec2(0.0f, 0.01f), true);
@@ -701,7 +703,7 @@ update_status ModuleSceneIntro::Update()
 	spring->GetPosition(x, y);
 	App->renderer->Blit(spring_text, x, y, NULL, 1.0f);
 
-	//INPUT FLIPPERS
+	//INPUT FLIPPERS ------------------------------------------------------------------------------------------
 	
 	//App->renderer->Blit(flip_l, 132, 557,NULL, 1.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), -0.5f);
 
@@ -729,9 +731,13 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 	
-	//MANUAL RESPAWN
+	//MANUAL RESPAWN -----------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-		lives = 3;
+		lives = lives -1;
+		if (lives == 0)
+		{
+		}
+
 		if (highscore < score) {
 			highscore = score;
 		}

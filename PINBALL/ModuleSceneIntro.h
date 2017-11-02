@@ -59,7 +59,7 @@ public:
 	uint score = 0;
 	uint highscore = 0;
 
-
+	SDL_Texture* game_over;
 	SDL_Texture* circle;
 	SDL_Texture* box;
 	SDL_Texture* rick;
