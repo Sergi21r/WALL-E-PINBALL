@@ -29,7 +29,8 @@ bool ModuleSceneIntro::Start()
 	general = App->textures->Load("pinball/map2.png");
 	circle = App->textures->Load("pinball/ball.png"); 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	flip_l = App->textures->Load("pinball/prueba1");
+	flip_l = App->textures->Load("pinball/flipper_l2.png");
+	flip_r = App->textures->Load("pinball/flipper_r2.png");
 	spring_text = App->textures->Load("pinball/muelle.png");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
@@ -694,9 +695,12 @@ update_status ModuleSceneIntro::Update()
 
 	//INPUT FLIPPERS
 	
-	App->renderer->Blit(spring_text, 132, 557,NULL, 0.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), -0.5f);
+	//App->renderer->Blit(flip_l, 132, 557,NULL, 1.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), -0.5f);
 
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_REPEAT)
+	App->renderer->Blit(flip_l, 135, 550 ,NULL, 1.0f, RADTODEG *App->physics->ret_flip_l->GetAngle(), 0, 0);
+	App->renderer->Blit(flip_r, 192, 551, NULL, 1.0f, RADTODEG* App->physics->ret_flip_r->GetAngle(), 48,0);
+
+	if (App->input->GetKey(SDL_SCANCODE_Z) || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 	{
 		App->physics->ret_flip_l->ApplyTorque(-100.0, true);
 	}
@@ -707,7 +711,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 
-	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_M) || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 	{
 		App->physics->ret_flip_r->ApplyTorque(100.0, true);
 	}

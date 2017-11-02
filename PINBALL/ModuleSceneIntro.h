@@ -31,8 +31,7 @@ public:
 	//background
 	SDL_Rect background;
 
-	//flippers
-	//PhysBody* flipperl;
+	
 
 	//spring
 	PhysBody* spring;
@@ -42,7 +41,10 @@ public:
 	PhysBody* stop1;
 	PhysBody* stop2;
 
+	//left flippers
+	//PhysBody* flipperl;
 	SDL_Texture* flip_l;
+	SDL_Texture* flip_r;
 
 	SDL_Texture* circle;
 	SDL_Texture* box;
