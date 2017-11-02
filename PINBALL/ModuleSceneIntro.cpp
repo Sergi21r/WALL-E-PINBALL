@@ -732,13 +732,18 @@ update_status ModuleSceneIntro::Update()
 	//MANUAL RESPAWN
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		lives = 3;
-		lastscore = score;
+		if (highscore < score) {
+			highscore = score;
+		}
 		score = 0;
 		circles.add(App->physics->CreateCircle(388, 540, 5));
 		circles.getLast()->data->listener = this;
 	}
-	p2SString title("LIVES: %d SCORE: %d LAST SCORE: %d ", lives, score, lastscore);
+
+	//TITLE WITH LIVES SCORE HIGHSCORE
+	p2SString title("LIVES: %d SCORE: %d LAST SCORE: %d ", lives, score, highscore);
 	App->window->SetTitle(title.GetString());
+
 
 	//RESPAWN BALL -------------------------------------------------------------
 	

@@ -57,7 +57,7 @@ public:
 
 	//score
 	uint score = 0;
-	uint lastscore = 0;
+	uint highscore = 0;
 
 
 	SDL_Texture* circle;
