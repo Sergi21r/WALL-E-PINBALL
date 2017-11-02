@@ -55,6 +55,10 @@ public:
 	uint lives = 3;
 	SDL_Texture* loselife;
 
+	//score
+	uint score = 0;
+	uint lastscore = 0;
+
 
 	SDL_Texture* circle;
 	SDL_Texture* box;

@@ -6,6 +6,8 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModuleWindow.h"
+#include "p2SString.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -655,7 +657,7 @@ bool ModuleSceneIntro::Start()
 	stop2->body->SetType(b2_staticBody);
 
 	//sensors
-	//Sensors.add(App->physics->CreateRectangleSensor(185, 595, 150, 2));
+	Sensors.add(App->physics->CreateRectangleSensor(185, 595, 150, 2));
 	respawn_sensor = App->physics->CreateRectangleSensor(185, 595, 150, 2);
 
 	return ret;
@@ -726,13 +728,24 @@ update_status ModuleSceneIntro::Update()
 			App->physics->ret_flip_r->ApplyTorque(-150.0, false);
 		}
 	}
+	
+	//MANUAL RESPAWN
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		lives = 3;
+		lastscore = score;
+		score = 0;
+		circles.add(App->physics->CreateCircle(388, 540, 5));
+		circles.getLast()->data->listener = this;
+	}
+	p2SString title("LIVES: %d SCORE: %d LAST SCORE: %d ", lives, score, lastscore);
+	App->window->SetTitle(title.GetString());
 
 	//RESPAWN BALL -------------------------------------------------------------
 	
 
 
 	// Prepare for raycast ------------------------------------------------------
-	
+	 
 	iPoint mouse;
 	mouse.x = App->input->GetMouseX();
 	mouse.y = App->input->GetMouseY();
@@ -795,10 +808,7 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
-
-	App->audio->PlayFx(bonus_fx);
-
+	
 	/*
 	if(bodyA)
 	{
@@ -811,13 +821,23 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
-
-
 	
+	
+	int x, y;
+	int xsens, ysens;
+	App->audio->PlayFx(bonus_fx);
+	
+	//bodyA->GetPosition(x, y);
+	//respawn_sensor->GetPosition(xsens, ysens);
 	p2List_item<PhysBody*>* sens = Sensors.getFirst();
 	
-	if (bodyA == respawn_sensor || bodyB == respawn_sensor) {
-		App->renderer->Blit(loselife, 500, 233, NULL);
+	if (bodyA == sens->data) {
+		//App->renderer->Blit(loselife, 500, 233, NULL);
+		circles.add(App->physics->CreateCircle(388, 540, 5));
+		circles.getLast()->data->listener = this;
 	}
+
+	//hacer que si choca con respawn sensor, if(lives==1) game over, if (lives==2 o 3) lives-- y respawn bola
+	//hacer score
 	
 }
