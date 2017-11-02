@@ -29,9 +29,10 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	general = App->textures->Load("pinball/map2.png");
+	general = App->textures->Load("pinball/map_def.png");
 	circle = App->textures->Load("pinball/ball.png"); 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	music = App->audio->LoadFx("pinball/Wall_E_-_Official_Sound.ogg");
 	flip_l = App->textures->Load("pinball/flipper_l2.png");
 	flip_r = App->textures->Load("pinball/flipper_r2.png");
 	spring_text = App->textures->Load("pinball/muelle.png");
@@ -39,6 +40,8 @@ bool ModuleSceneIntro::Start()
 	//game_over = App->textures->Load("pinball/game_over.png");
 
 	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+
+	App->audio->PlayFx(music);
 
 	//CHAIN COLLIDER 1
 	int chain_collider1[134] = {
@@ -213,7 +216,7 @@ bool ModuleSceneIntro::Start()
 	PhysBody* bg6;
 	bg6 = App->physics->CreateChain(0, 0, chain_collider7, 18);
 	bg6->body->SetType(b2_staticBody);
-	bg6->body->GetFixtureList()->SetRestitution(1.5f);
+	bg6->body->GetFixtureList()->SetRestitution(1.2f);
 
 	//COLLIDER8
 	int chain_collider8[8] = {
@@ -283,7 +286,7 @@ bool ModuleSceneIntro::Start()
 	PhysBody* bg11;
 	bg11 = App->physics->CreateChain(0, 0, chain_collider12, 28);
 	bg11->body->SetType(b2_staticBody);
-	bg11->body->GetFixtureList()->SetRestitution(2.0f); 
+	bg11->body->GetFixtureList()->SetRestitution(1.2f); 
 
 	//COLLIDER13
 	int chain_collider13[60] = {

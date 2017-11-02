@@ -71,6 +71,7 @@ public:
 	SDL_Texture* box;
 	SDL_Texture* rick;
 	uint bonus_fx;
+	uint music;
 	p2Point<int> ray;
 	bool ray_on;
 };
